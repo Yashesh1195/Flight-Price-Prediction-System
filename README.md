@@ -1,134 +1,121 @@
-# ✈️ Flight Price Prediction - Streamlit Application
+# ✈️ Flight Price Prediction System - Streamlit Dashboard
 
-An interactive web application for **Exploratory Data Analysis (EDA)** and **Machine Learning modeling** of flight prices, built with **Streamlit** and **Plotly**. Supports multiple regression models, advanced diagnostics, and interactive price prediction.
+An interactive web application for **Exploratory Data Analysis (EDA)** and **Machine Learning regression modeling** of flight ticket prices, built with **Streamlit**, **Plotly**, and **scikit-learn**.
+
+---
 
 ## 📋 Table of Contents
 
 - [Overview](#overview)
-- [Features](#features)
+- [Key Features](#key-features)
 - [Dataset Information](#dataset-information)
 - [Installation](#installation)
 - [Project Structure](#project-structure)
-- [Usage](#usage)
-- [Pages](#pages)
-- [Feature Engineering](#feature-engineering)
-- [Model Details](#model-details)
+- [Usage & Dashboard Pages](#usage--dashboard-pages)
+- [Feature Engineering Framework](#feature-engineering-framework)
+- [Machine Learning Models & Metrics](#machine-learning-models--metrics)
 - [Requirements](#requirements)
+- [License & Acknowledgments](#license--acknowledgments)
 
 ---
 
 ## 🎯 Overview
 
-This project provides an interactive dashboard to explore flight pricing data and build a predictive regression model. The app is powered by **Streamlit** with **Plotly** for interactive charts and **scikit-learn** for machine learning.
+This system provides a full end-to-end Machine Learning solution to analyze dynamic flight price variations and predict ticket prices (in Indian Rupees - ₹). It features a multi-page **Streamlit** web application equipped with interactive **Plotly** visualizations, comprehensive diagnostic analytics, and real-time price inference engines.
 
 Key highlights:
-- Filterable, interactive EDA visualizations (Plotly)
-- Multiple ML models: Linear, Ridge, Lasso Regression & Random Forest
-- One-Hot / Label Encoding toggle, StandardScaler, log-transform Price
-- K-Fold Cross-Validation, Adjusted R², VIF, QQ-Plot diagnostics
-- Interactive price prediction page with dropdowns & sliders
-- Download buttons for filtered data and model results
-- Temporal analysis, outlier detection, violin plots, top routes
-- Custom-styled sidebar with branded navigation
+- **Interactive EDA**: Filterable Plotly distribution charts, city pricing dynamics, top routes, temporal trends, outlier detection, and correlation heatmaps.
+- **Multiple ML Regression Models**: OLS Linear Regression, L2 Regularized Ridge Regression, and L1 Regularized Lasso Regression.
+- **Preprocessing Pipeline**: Flexible Label / One-Hot Encoding toggles, `StandardScaler` feature scaling, and robust string parsing.
+- **Diagnostic Analytics**: Variance Inflation Factor (VIF) multicollinearity checks, Actual vs. Predicted scatter plots, and Residual Distribution histograms.
+- **Real-Time Prediction Engine**: Form interface with dropdowns and sliders for instant flight price estimation.
+- **Data Exporting**: Download buttons for filtered raw data and trained model metrics as CSV files.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-### 1. Data Overview
-- Dataset shape, record count, and column types
-- Duplicate row count and data quality metrics
-- Missing-value bar chart and null-count summary
-- Descriptive statistics for numeric columns
-- Adjustable raw-data sample viewer with CSV download
-- Raw vs feature-engineered data toggle comparison
+### 1. 📊 Overview Page
+- Total records, feature count, target variable (`Price`), and data shape summary.
+- Data quality metrics: duplicate row detection, missing value counts, and complete row statistics.
+- Interactive missing values bar chart.
+- Descriptive statistics for numeric columns.
+- Raw sample data viewer with slider control and CSV download capability.
+- **Raw vs. Processed Data Toggle**: Side-by-side comparison of original Excel data vs. feature-engineered dataset.
 
-### 2. Exploratory Data Analysis (EDA)
-- Price distribution histogram with box-plot marginal
-- Price statistics (mean, median, std dev, min, max, **skewness, kurtosis**)
-- Average price by airline (with selectable aggregation: mean / median / min / max)
-- **Violin plots** for price distribution by Airline, Source, Destination, or Stops
-- Price by source city and destination city
-- **Top routes analysis** (most frequent & most expensive Source→Destination)
-- **Temporal price analysis** — average price by month and day of month
-- Price by additional info category and number of stops
-- **Outlier detection** with IQR method, box plots, and metrics
-- Price vs duration scatter (colored by airline)
-- Full-feature correlation heatmap
-- Sidebar filters for airline, source, destination, and price range
-- **Download filtered data** as CSV
+### 2. 🔍 Exploratory Data Analysis (EDA) Page
+- **Price Distribution**: Histogram with box-plot marginal and configurable bin counts.
+- **Price Statistics Grid**: Neatly arranged 2-column layout showing Mean, Median, Std Dev, Min, Max, **Skewness (+1.81)**, and **Kurtosis (+13.25)**.
+- **Airline Price Analysis**: Horizontal bar chart with selectable aggregation methods (Mean, Median, Min, Max).
+- **Source & Destination Analysis**: City-wise pricing breakdowns and flight counts.
+- **Top Routes Analysis**: Side-by-side comparison of the Top 10 Most Frequent and Top 10 Most Expensive routes.
+- **Temporal Analysis**: Monthly trend lines with flight count overlays and day-of-month price variations.
+- **Outlier Detection**: Interquartile Range (IQR) method calculations, lower/upper boundaries, and interactive box plots.
+- **Correlation Heatmap**: Full-feature correlation matrix visualization.
+- **Sidebar Filters**: Multi-select filters for Airline, Source City, Destination City, and Price Range sliders with CSV export for filtered data.
 
-### 3. Model Training & Prediction
-- **Multiple models:** Linear Regression, Ridge, Lasso, Random Forest
-- **Encoding toggle:** Label Encoding or One-Hot Encoding
-- **StandardScaler** toggle for feature scaling
-- **Log-transform Price** toggle
-- Interactive feature selection from sidebar
-- Configurable test-size and random state
-- **Model comparison table & bar charts** (when multiple models selected)
-- Train / test performance metrics (R², **Adjusted R²**, RMSE, MAE)
-- **K-Fold Cross-Validation** scores
-- **VIF table** for multicollinearity analysis
-- Feature coefficient bar chart and table (linear models) / feature importance (tree models)
-- Actual vs Predicted scatter plots (train & test)
-- Residuals distribution histograms (train & test)
-- Residuals vs Predicted diagnostic scatter
-- **QQ-Plot** for residual normality check
-- Auto-generated model summary with quality assessment
-- **Download model metrics** as CSV
+### 3. 🤖 Model Training & Prediction Page
+- **Models Benchmarked**: Linear Regression (OLS), Ridge Regression, Lasso Regression.
+- **Configurable Settings**: Test set size slider (10%–40%), Random State seed, Label Encoding vs. One-Hot Encoding toggle, and `StandardScaler` toggle.
+- **Interactive Feature Selection**: Checkbox/multi-select list to test specific feature subsets.
+- **Performance Benchmarking Table & Charts**: Multi-model metrics table and dual bar plots ($R^2$, Adjusted $R^2$, RMSE, MAE).
+- **Multicollinearity Diagnostics**: Variance Inflation Factor (VIF) table with color-coded status badges (`Low < 5`, `Moderate < 10`, `High > 10`).
+- **Feature Coefficients**: Colored bar chart displaying positive and negative regression feature weights.
+- **Diagnostic Scatter Plots**: Actual vs. Predicted scatter plots (Train & Test) with 45-degree reference line and Residual Distribution histograms.
+- **Model Summary Card**: Automated text summary highlighting metrics and predictive quality rating.
+- **Exporting**: Download model evaluation metrics as a CSV file.
 
-### 4. Predict Price
-- Interactive prediction form with dropdowns and sliders
-- Select Airline, Source, Destination, Stops, date/time, and duration
-- Instant price prediction using a pre-trained Linear Regression model
-- Styled result card with flight details
+### 4. 🎯 Predict Price Page
+- Interactive input form with dropdowns for Airline, Source, Destination, and Total Stops.
+- Input controls for Travel Date (Day, Month), Departure Time (Hour, Minute), Arrival Time (Hour, Minute), and Flight Duration (Hours, Minutes).
+- Instant price prediction calculated by the underlying trained regression model.
+- Gradient-styled result display card summarizing flight details and estimated ticket cost.
 
 ---
 
 ## 📊 Dataset Information
 
-**Source:** [Kaggle - Flight Price Prediction](https://www.kaggle.com/datasets/shubhambathwal/flight-price-prediction)
+**Source:** [Kaggle - Flight Price Prediction Dataset](https://www.kaggle.com/datasets/shubhambathwal/flight-price-prediction)
 
-The app expects an Excel file named `flight_price.xlsx` in the project root.
+The application processes `flight_price.xlsx` located in the project root.
 
-### Dataset Features
+### Raw Data Dictionary
 
-| Feature | Type | Description |
-|---------|------|-------------|
-| **Airline** | Categorical | Airline company name |
-| **Flight** | Categorical | Flight code |
-| **Date_of_Journey** | String | Travel date (DD/MM/YYYY) |
-| **Source** | Categorical | Origin city |
-| **Destination** | Categorical | Destination city |
-| **Route** | Categorical | Flight route details |
-| **Dep_Time** | Time | Departure time (HH:MM) |
-| **Arrival_Time** | Time | Arrival time (HH:MM) |
-| **Duration** | String | Total flight duration (e.g. "2h 30m") |
-| **Total_Stops** | Categorical | Number of stops (non-stop, 1 stop, 2 stops, etc.) |
-| **Additional_Info** | Categorical | Extra ticket information |
-| **Price** | Numerical | **Target variable** — ticket price in ₹ (INR) |
+| Column Name | Type | Domain Category | Description & Example Values |
+| :--- | :--- | :--- | :--- |
+| **Airline** | Categorical (`object`) | Categorical | Carrier name (e.g., *IndiGo, Air India, Jet Airways*) |
+| **Date_of_Journey** | String (`object`) | Temporal | Travel date formatted `DD/MM/YYYY` (e.g., `"24/03/2019"`) |
+| **Source** | Categorical (`object`) | Geographical | Departure city (e.g., *Banglore, Kolkata, Delhi*) |
+| **Destination** | Categorical (`object`) | Geographical | Arrival city (e.g., *New Delhi, Cochin, Banglore*) |
+| **Route** | String (`object`) | Flight Path | Layover airport sequence (e.g., `"BLR → DEL"`) |
+| **Dep_Time** | String (`object`) | Temporal | Departure time in HH:MM (e.g., `"22:20"`) |
+| **Arrival_Time** | String (`object`) | Temporal | Arrival time (e.g., `"01:10 22 Mar"`) |
+| **Duration** | String (`object`) | Temporal | Duration string (e.g., `"2h 50m"`, `"19h"`, `"45m"`) |
+| **Total_Stops** | Categorical (`object`) | Logistics | Intermediate stops (e.g., `"non-stop"`, `"1 stop"`, `"2 stops"`) |
+| **Additional_Info** | Categorical (`object`) | Metadata | Extra notes (e.g., `"No info"`, `"In-flight meal not included"`) |
+| **Price** | Numerical (`int64`) | Target | Ticket price in INR ₹ (**Target Variable**) |
 
 ---
 
-## 🚀 Installation
+## 🚀 Installation & Setup
 
 ### Prerequisites
-- Python 3.8+
-- pip
+- Python 3.10 or higher
+- `pip` package manager
 
-### Step 1: Clone or Download
+### Step 1: Clone the Repository
 ```bash
 git clone <repository-url>
-cd "Flight EDA"
+cd "Flight Price Prediction System"
 ```
 
-### Step 2: Create Virtual Environment (Recommended)
+### Step 2: Create a Virtual Environment
 ```bash
 # Windows
 python -m venv venv
 venv\Scripts\activate
 
-# macOS/Linux
+# macOS / Linux
 python3 -m venv venv
 source venv/bin/activate
 ```
@@ -138,119 +125,83 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Step 4: Add the Dataset
-Place `flight_price.xlsx` in the project root directory. The dataset can be downloaded from [Kaggle](https://www.kaggle.com/datasets/shubhambathwal/flight-price-prediction).
-
-### Step 5: Run the Application
+### Step 4: Run the Streamlit Dashboard
 ```bash
 streamlit run app.py
 ```
 
-The app will open in your browser at `http://localhost:8501`.
+The web dashboard will launch automatically at `http://localhost:8501`.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-Flight EDA/
-├── app.py                 # Main Streamlit application (4 pages)
-├── data_utils.py          # Data loading, feature engineering & encoding utilities
-├── eda_utils.py           # Matplotlib/Seaborn-based EDA helper functions
-├── ml_model.py            # FlightPriceModel class (Linear Regression)
-├── EDA And FE Flight Price.ipynb  # Jupyter notebook for standalone EDA & feature engineering
-├── requirements.txt       # Python dependencies
-├── flight_price.xlsx      # Flight dataset (Excel)
-└── README.md              # This file
+Flight Price Prediction System/
+├── app.py                         # Streamlit Multi-Page Dashboard UI (4 pages)
+├── data_utils.py                  # Data loading, feature engineering & encoding utilities
+├── eda_utils.py                   # Matplotlib/Seaborn EDA plotting routines
+├── ml_model.py                    # FlightPriceModel class (Linear, Ridge, Lasso)
+├── Flight Price Prediction.ipynb # Jupyter Notebook for exploratory analysis & modeling
+├── PROJECT_REPORT.md              # Comprehensive Technical Project Report & Interview Guide
+├── flight_price.xlsx              # Raw Excel Flight Dataset
+├── requirements.txt               # Python dependencies manifest
+└── README.md                      # Project documentation
 ```
 
-| File | Description |
-|------|-------------|
-| `app.py` | Streamlit dashboard with Overview, EDA, and Model Training pages. Uses Plotly for all interactive charts. |
-| `data_utils.py` | `load_flight_data()`, `feature_engineering()`, `encode_categorical_features()`, `get_data_statistics()`. |
-| `eda_utils.py` | Matplotlib/Seaborn plotting helpers (price distribution, airline analysis, correlation heatmap, etc.). |
-| `ml_model.py` | `FlightPriceModel` class — data preparation, training, metrics, coefficient analysis, and diagnostic plots. |
-| `EDA And FE Flight Price.ipynb` | Jupyter notebook covering the same EDA and feature engineering workflow interactively. |
+### File Responsibilities
+
+| File | Primary Responsibility |
+| :--- | :--- |
+| `app.py` | Main Streamlit interface managing layout, sidebar navigation, user inputs, and Plotly rendering. |
+| `data_utils.py` | Handles raw data loading, date/time/duration string parsing, total stops mapping, and feature encoding. |
+| `eda_utils.py` | Utility functions for Matplotlib and Seaborn statistical plotting. |
+| `ml_model.py` | Object-oriented `FlightPriceModel` class encapsulating train/test splits, model fitting, metric evaluation, and diagnostic plotting routines. |
+| `PROJECT_REPORT.md` | Comprehensive 15-section technical report detailing end-to-end architecture, mathematical intuition, empirical benchmarks, and an interview preparation masterclass. |
+| `Flight Price Prediction.ipynb` | Standalone Jupyter Notebook containing interactive data exploration, feature extraction, and model benchmarking. |
 
 ---
 
-## 📖 Usage
+## 🔧 Feature Engineering Framework
 
-```bash
-streamlit run app.py
-```
+Automated feature processing pipeline implemented in `data_utils.py` and `app.py`:
 
-Navigate using the sidebar:
-
-1. **📊 Overview** — Dataset info, shape, null counts, descriptive stats, raw-data preview, raw vs processed toggle.
-2. **🔍 Exploratory Data Analysis** — Interactive Plotly charts with sidebar filters, violin plots, temporal analysis, outlier detection, top routes.
-3. **🤖 Model Training & Prediction** — Train multiple ML models with encoding/scaling/log-transform toggles, cross-validation, VIF, QQ-plot.
-4. **🎯 Predict Price** — Enter flight details and get an instant price prediction.
-
----
-
-## 🔧 Feature Engineering
-
-Performed automatically in `app.py` (and available as standalone functions in `data_utils.py`):
-
-| Step | Transformation |
-|------|---------------|
-| Date | Extract `Date`, `Month`, `Year` from `Date_of_Journey`; drop original column |
-| Arrival Time | Extract `Arrival_hour`, `Arrival_min`; drop original column |
-| Departure Time | Extract `Departure_hour`, `Departure_min` from `Dep_Time`; drop original column |
-| Duration | Extract `Duration_hour`, `Duration_min` (handles "2h 30m", "5m", "2h"); drop original column |
-| Stops | Map `Total_Stops` text → numeric (non-stop=0 … 4 stops=4); fill NaN with 1 |
-| Cleanup | Drop `Route` and `Additional_Info` columns |
-| Encoding | Label-encode all remaining categorical columns for modeling |
+| Raw Feature | Transformed Features | Method & Domain Rationale |
+| :--- | :--- | :--- |
+| `Date_of_Journey` | `Date`, `Month`, `Year` | String split on `/`; converts date text into integer features. |
+| `Dep_Time` | `Departure_hour`, `Departure_min` | String split on `:`; captures time-of-day pricing dynamics. |
+| `Arrival_Time` | `Arrival_hour`, `Arrival_min` | Strips date info and splits on `:`; captures arrival time windows. |
+| `Duration` | `Duration_hour`, `Duration_min` | Parses `'h'` and `'m'` tokens safely; converts text into numeric minutes/hours. |
+| `Total_Stops` | `Total_Stops` | Ordinal mapping: `'non-stop'`: 0, `'1 stop'`: 1, `'2 stops'`: 2, `'3 stops'`: 3, `'4 stops'`: 4. |
+| `Route` & `Additional_Info` | *[DROPPED]* | Dropped due to high cardinality redundancy (`Route`) and 80%+ `"No info"` values (`Additional_Info`). |
+| Categorical Encodings | Dummy / Integer columns | Supports both Label Encoding and One-Hot Encoding (`pd.get_dummies(drop_first=True)`). |
 
 ---
 
-## 🤖 Model Details
+## 🤖 Machine Learning Models & Metrics
 
-### Available Models
+### Supported Algorithms
+1. **Ordinary Least Squares (OLS) Linear Regression**: Unregularized linear baseline.
+2. **Ridge Regression (L2 Regularization)**: Adds squared L2 penalty penalty ($\alpha \sum \beta_j^2$) to control multicollinearity.
+3. **Lasso Regression (L1 Regularization)**: Adds absolute L1 penalty penalty ($\alpha \sum |\beta_j|$) for embedded feature selection.
 
-| Model | Description |
-|-------|-------------|
-| **Linear Regression** | Standard OLS regression (always available) |
-| **Ridge Regression** | L2 regularization with configurable alpha |
-| **Lasso Regression** | L1 regularization with configurable alpha |
-| **Random Forest** | Ensemble tree model with configurable n_estimators |
+### Empirical Benchmarking Results
 
-### Configurable Parameters (via sidebar)
+| Model Algorithm | Training $R^2$ | Testing $R^2$ | Adjusted $R^2$ | Testing RMSE (₹) | Testing MAE (₹) | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Linear Regression (OLS)** | 0.6870 | **0.6870** | **0.6812** | **₹2,574** | **₹1,787** | Top Baseline |
+| **Lasso Regression ($\alpha=0.001$)** | 0.6870 | **0.6870** | **0.6812** | **₹2,574** | **₹1,787** | Sparse Linear |
+| **Ridge Regression ($\alpha=1.0$)** | 0.6868 | 0.6868 | 0.6810 | ₹2,575 | ₹1,787 | Regularized Linear |
 
-| Parameter | Default | Range |
-|-----------|---------|-------|
-| Test size | 20 % | 10–40 % |
-| Random state | 42 | 0–1000 |
-| Encoding | Label Encoding | Label / One-Hot |
-| Feature Scaling | Off | StandardScaler toggle |
-| Log-Transform Price | Off | log1p toggle |
-| K-Fold CV | Off | 3–10 folds |
-| Features | All | User-selectable subset |
-
-### Evaluation Metrics
-
-| Metric | Description |
-|--------|-------------|
-| **R²** | Proportion of variance explained (higher is better) |
-| **Adjusted R²** | R² adjusted for number of predictors |
-| **RMSE** | Root Mean Squared Error in ₹ (lower is better) |
-| **MAE** | Mean Absolute Error in ₹ (lower is better) |
-| **CV R²** | Mean R² from K-Fold Cross-Validation |
-
-### Diagnostic Visualizations
-- Model comparison table & bar charts (multi-model)
-- Feature coefficient bar chart / feature importance (tree models)
-- VIF table for multicollinearity analysis
-- Actual vs Predicted scatter (train & test, with perfect-fit reference line)
-- Residuals distribution histograms (train & test)
-- Residuals vs Predicted scatter (test set)
-- QQ-Plot for residual normality check
-- Auto-generated model summary with quality rating (good / moderate / poor)
+### Key Metrics Formulations
+- **Coefficient of Determination ($R^2$)**: $R^2 = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2}$
+- **Adjusted $R^2$**: $R^2_{\text{adj}} = 1 - \left[ (1 - R^2) \frac{n - 1}{n - p - 1} \right]$
+- **Root Mean Squared Error (RMSE)**: $RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}$
+- **Mean Absolute Error (MAE)**: $MAE = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|$
 
 ---
 
-## 📦 Requirements
+## 📦 Requirements Manifest
 
 ```
 streamlit>=1.28.0
@@ -266,65 +217,20 @@ scipy
 ```
 
 | Package | Purpose |
-|---------|---------|
-| streamlit | Web application framework |
-| plotly | Interactive visualizations in the dashboard |
-| pandas / numpy | Data manipulation and numerical computing |
-| matplotlib / seaborn | Static plots (utility modules & notebook) |
-| scikit-learn | Regression models, encoding, train/test split, cross-validation, metrics |
-| openpyxl | Reading the `.xlsx` dataset |
-| statsmodels | Variance Inflation Factor (VIF) analysis |
-| scipy | QQ-plot and statistical tests |
+| :--- | :--- |
+| `streamlit` | Multi-page web dashboard framework |
+| `plotly` | Interactive chart generation engine |
+| `pandas` / `numpy` | Data manipulation, array operations, and feature transformation |
+| `matplotlib` / `seaborn` | Static statistical plotting helper utilities |
+| `scikit-learn` | Regression estimators, encoders, scaling transformers, train/test split, and metrics |
+| `openpyxl` | Excel file reader for `.xlsx` dataset |
+| `statsmodels` | Variance Inflation Factor (VIF) multicollinearity computation |
+| `scipy` | Statistical quantile calculations |
 
 ---
 
-## 🐛 Troubleshooting
+## 📄 License & Acknowledgments
 
-| Issue | Solution |
-|-------|----------|
-| `FileNotFoundError: flight_price.xlsx` | Place the Excel file in the project root |
-| `ModuleNotFoundError` | Run `pip install -r requirements.txt` |
-| Port already in use | `streamlit run app.py --server.port 8502` |
-
----
-
-## 📄 License
-
-This project is open for educational and personal use.
-
-## 🙏 Acknowledgments
-
-- Kaggle for the flight price dataset
-- Streamlit for the web framework
-- scikit-learn for ML tools
-- Pandas, NumPy, Matplotlib, Seaborn for data processing and visualization
-
----
-
-## 📧 Support
-
-For issues or questions:
-1. Check the Troubleshooting section
-2. Review the Feature Engineering section
-3. Verify dataset structure
-4. Check requirements installation
-
----
-
-## 🎓 Learning Outcomes
-
-This project demonstrates:
-- ✅ Exploratory Data Analysis (EDA)
-- ✅ Feature Engineering
-- ✅ Data Preprocessing
-- ✅ Machine Learning Model Training
-- ✅ Model Evaluation and Metrics
-- ✅ Data Visualization
-- ✅ Web Application Development
-- ✅ Python Programming Best Practices
-- ✅ Data Science Workflow
-
----
-
-**Last Updated**: March 2026  
-**Version**: 1.0.0
+- **Dataset**: Kaggle Flight Price Prediction Dataset
+- **Tools**: Streamlit, scikit-learn, Plotly, Pandas
+- **License**: Open for educational and personal research use.

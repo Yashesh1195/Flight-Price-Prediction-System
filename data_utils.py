@@ -39,31 +39,56 @@ def feature_engineering(df):
     df_processed = df.copy()
     
     # Date Feature Engineering
-    df_processed['Date'] = df_processed['Date_of_Journey'].str.split('/').str[0].astype(int)
-    df_processed['Month'] = df_processed['Date_of_Journey'].str.split('/').str[1].astype(int)
-    df_processed['Year'] = df_processed['Date_of_Journey'].str.split('/').str[2].astype(int)
-    df_processed.drop('Date_of_Journey', axis=1, inplace=True)
+    if 'Date_of_Journey' in df_processed.columns:
+        df_processed['Date'] = df_processed['Date_of_Journey'].str.split('/').str[0].astype(int)
+        df_processed['Month'] = df_processed['Date_of_Journey'].str.split('/').str[1].astype(int)
+        df_processed['Year'] = df_processed['Date_of_Journey'].str.split('/').str[2].astype(int)
+        df_processed.drop('Date_of_Journey', axis=1, inplace=True)
     
     # Arrival Time Feature Engineering
-    df_processed['Arrival_Time'] = df_processed['Arrival_Time'].apply(lambda x: x.split(' ')[0])
-    df_processed['Arrival_hour'] = df_processed['Arrival_Time'].str.split(':').str[0].astype(int)
-    df_processed['Arrival_min'] = df_processed['Arrival_Time'].str.split(':').str[1].astype(int)
-    df_processed.drop('Arrival_Time', axis=1, inplace=True)
+    if 'Arrival_Time' in df_processed.columns:
+        df_processed['Arrival_Time'] = df_processed['Arrival_Time'].apply(lambda x: str(x).split(' ')[0])
+        df_processed['Arrival_hour'] = df_processed['Arrival_Time'].str.split(':').str[0].astype(int)
+        df_processed['Arrival_min'] = df_processed['Arrival_Time'].str.split(':').str[1].astype(int)
+        df_processed.drop('Arrival_Time', axis=1, inplace=True)
     
-    # Departure Time Feature Engineering
-    df_processed['Departure_hour'] = df_processed['Departure_Time'].str.split(':').str[0].astype(int)
-    df_processed['Departure_min'] = df_processed['Departure_Time'].str.split(':').str[1].astype(int)
-    df_processed.drop('Departure_Time', axis=1, inplace=True)
+    # Departure Time Feature Engineering (raw Excel column is Dep_Time)
+    dep_col = 'Dep_Time' if 'Dep_Time' in df_processed.columns else ('Departure_Time' if 'Departure_Time' in df_processed.columns else None)
+    if dep_col:
+        df_processed['Departure_hour'] = df_processed[dep_col].str.split(':').str[0].astype(int)
+        df_processed['Departure_min'] = df_processed[dep_col].str.split(':').str[1].astype(int)
+        df_processed.drop(dep_col, axis=1, inplace=True)
     
     # Duration Feature Engineering
-    df_processed['Duration_hours'] = df_processed['Duration'].apply(
-        lambda x: int(x.split('h')[0].strip()) if 'h' in x else 0
-    )
-    df_processed['Duration_mins'] = df_processed['Duration'].apply(
-        lambda x: int(x.split('h')[1].split('m')[0].strip()) if 'h' in x and 'm' in x 
-        else (int(x.split('m')[0].strip()) if 'm' in x else 0)
-    )
-    df_processed.drop('Duration', axis=1, inplace=True)
+    if 'Duration' in df_processed.columns:
+        def parse_hours(val):
+            if pd.isna(val): return 0
+            val_str = str(val)
+            return int(val_str.split('h')[0].strip()) if 'h' in val_str else 0
+
+        def parse_mins(val):
+            if pd.isna(val): return 0
+            val_str = str(val)
+            if 'h' in val_str and 'm' in val_str:
+                return int(val_str.split('h')[1].split('m')[0].strip())
+            elif 'm' in val_str:
+                return int(val_str.split('m')[0].strip())
+            return 0
+
+        df_processed['Duration_hour'] = df_processed['Duration'].apply(parse_hours)
+        df_processed['Duration_min'] = df_processed['Duration'].apply(parse_mins)
+        df_processed.drop('Duration', axis=1, inplace=True)
+    
+    # Total Stops Feature Engineering
+    if 'Total_Stops' in df_processed.columns:
+        df_processed['Total_Stops'] = df_processed['Total_Stops'].map({
+            'non-stop': 0, '1 stop': 1, '2 stops': 2, '3 stops': 3, '4 stops': 4
+        })
+        df_processed['Total_Stops'] = df_processed['Total_Stops'].fillna(1).astype(int)
+    
+    # Drop Route and Additional_Info if present
+    columns_to_drop = ['Route', 'Additional_Info']
+    df_processed.drop(columns=[c for c in columns_to_drop if c in df_processed.columns], inplace=True)
     
     return df_processed
 

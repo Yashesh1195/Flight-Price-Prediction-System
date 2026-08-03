@@ -31,44 +31,39 @@ def plot_source_destination_analysis(df):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
     
     # Source City
-    source_price = df.groupby('Source_City')['Price'].mean().sort_values(ascending=False)
-    source_price.plot(kind='bar', ax=ax1, color='lightblue')
-    ax1.set_xlabel('Source City', fontsize=12)
-    ax1.set_ylabel('Average Price (₹)', fontsize=12)
-    ax1.set_title('Average Price by Source City', fontsize=14, fontweight='bold')
-    ax1.tick_params(axis='x', rotation=45)
+    source_col = 'Source' if 'Source' in df.columns else ('Source_City' if 'Source_City' in df.columns else None)
+    if source_col:
+        source_price = df.groupby(source_col)['Price'].mean().sort_values(ascending=False)
+        source_price.plot(kind='bar', ax=ax1, color='lightblue')
+        ax1.set_xlabel('Source City', fontsize=12)
+        ax1.set_ylabel('Average Price (₹)', fontsize=12)
+        ax1.set_title('Average Price by Source City', fontsize=14, fontweight='bold')
+        ax1.tick_params(axis='x', rotation=45)
     
     # Destination City
-    dest_price = df.groupby('Destination_City')['Price'].mean().sort_values(ascending=False)
-    dest_price.plot(kind='bar', ax=ax2, color='lightgreen')
-    ax2.set_xlabel('Destination City', fontsize=12)
-    ax2.set_ylabel('Average Price (₹)', fontsize=12)
-    ax2.set_title('Average Price by Destination City', fontsize=14, fontweight='bold')
-    ax2.tick_params(axis='x', rotation=45)
+    dest_col = 'Destination' if 'Destination' in df.columns else ('Destination_City' if 'Destination_City' in df.columns else None)
+    if dest_col:
+        dest_price = df.groupby(dest_col)['Price'].mean().sort_values(ascending=False)
+        dest_price.plot(kind='bar', ax=ax2, color='lightgreen')
+        ax2.set_xlabel('Destination City', fontsize=12)
+        ax2.set_ylabel('Average Price (₹)', fontsize=12)
+        ax2.set_title('Average Price by Destination City', fontsize=14, fontweight='bold')
+        ax2.tick_params(axis='x', rotation=45)
     
     plt.tight_layout()
     return fig
 
-def plot_class_stops_analysis(df):
-    """Create seat class and stops analysis"""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
-    
-    # Class Analysis
-    class_price = df.groupby('Class')['Price'].mean()
-    class_price.plot(kind='bar', ax=ax1, color=['#1f77b4', '#ff7f0e'])
-    ax1.set_xlabel('Seat Class', fontsize=12)
-    ax1.set_ylabel('Average Price (₹)', fontsize=12)
-    ax1.set_title('Average Price by Seat Class', fontsize=14, fontweight='bold')
-    ax1.tick_params(axis='x', rotation=0)
-    
-    # Stops Analysis
-    stops_price = df.groupby('Stops')['Price'].mean().sort_index()
-    stops_price.plot(kind='bar', ax=ax2, color='mediumpurple')
-    ax2.set_xlabel('Number of Stops', fontsize=12)
-    ax2.set_ylabel('Average Price (₹)', fontsize=12)
-    ax2.set_title('Average Price by Number of Stops', fontsize=14, fontweight='bold')
-    ax2.tick_params(axis='x', rotation=0)
-    
+def plot_stops_analysis(df):
+    """Create stops analysis plot"""
+    fig, ax = plt.subplots(figsize=(8, 6))
+    stops_col = 'Total_Stops' if 'Total_Stops' in df.columns else ('Stops' if 'Stops' in df.columns else None)
+    if stops_col:
+        stops_price = df.groupby(stops_col)['Price'].mean().sort_index()
+        stops_price.plot(kind='bar', ax=ax, color='mediumpurple')
+        ax.set_xlabel('Number of Stops', fontsize=12)
+        ax.set_ylabel('Average Price (₹)', fontsize=12)
+        ax.set_title('Average Price by Number of Stops', fontsize=14, fontweight='bold')
+        ax.tick_params(axis='x', rotation=0)
     plt.tight_layout()
     return fig
 

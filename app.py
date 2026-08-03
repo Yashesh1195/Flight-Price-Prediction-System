@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -150,7 +151,10 @@ st.markdown('<h1 class="main-header">✈️ Flight Price Prediction Analysis</h1
 # Load data
 @st.cache_data
 def load_data():
-    df = pd.read_excel('flight_price.xlsx')
+    path = 'flight_price.xlsx'
+    if not os.path.exists(path):
+        path = os.path.join(os.path.dirname(__file__), '..', 'flight_price.xlsx')
+    df = pd.read_excel(path)
     return df
 
 @st.cache_data
@@ -352,15 +356,18 @@ elif page == "🔍  Exploratory Data Analysis":
     
     with col2:
         st.markdown('<h2 class="section-header">Price Statistics</h2>', unsafe_allow_html=True)
-        st.metric("Mean Price", f"₹{df_filtered['Price'].mean():,.0f}")
-        st.metric("Median Price", f"₹{df_filtered['Price'].median():,.0f}")
-        st.metric("Std Dev", f"₹{df_filtered['Price'].std():,.0f}")
-        st.metric("Min Price", f"₹{df_filtered['Price'].min():,.0f}")
-        st.metric("Max Price", f"₹{df_filtered['Price'].max():,.0f}")
-        skewness = df_filtered['Price'].skew()
-        kurtosis = df_filtered['Price'].kurtosis()
-        st.metric("Skewness", f"{skewness:.3f}")
-        st.metric("Kurtosis", f"{kurtosis:.3f}")
+        m_col1, m_col2 = st.columns(2)
+        with m_col1:
+            st.metric("Mean Price", f"₹{df_filtered['Price'].mean():,.0f}")
+            st.metric("Median Price", f"₹{df_filtered['Price'].median():,.0f}")
+            st.metric("Std Dev", f"₹{df_filtered['Price'].std():,.0f}")
+            st.metric("Min Price", f"₹{df_filtered['Price'].min():,.0f}")
+        with m_col2:
+            st.metric("Max Price", f"₹{df_filtered['Price'].max():,.0f}")
+            skewness = df_filtered['Price'].skew()
+            kurtosis = df_filtered['Price'].kurtosis()
+            st.metric("Skewness", f"{skewness:.3f}")
+            st.metric("Kurtosis", f"{kurtosis:.3f}")
     
     # --- Airline Analysis ---
     st.markdown('<h2 class="section-header">Price by Airline</h2>', unsafe_allow_html=True)
@@ -379,15 +386,15 @@ elif page == "🔍  Exploratory Data Analysis":
     st.plotly_chart(fig, use_container_width=True)
     
     # --- Violin Plots: Airline, Source, Destination ---
-    st.markdown('<h2 class="section-header">Price Distribution by Category (Violin Plots)</h2>', unsafe_allow_html=True)
-    violin_cat = st.radio("Category", ["Airline", "Source", "Destination", "Total_Stops"], horizontal=True, key="violin_cat")
-    fig = px.violin(
-        df_filtered, x=violin_cat, y='Price', color=violin_cat, box=True, points='outliers',
-        title=f'Price Distribution by {violin_cat}',
-        labels={'Price': 'Price (₹)'}
-    )
-    fig.update_layout(showlegend=False, xaxis_tickangle=-45)
-    st.plotly_chart(fig, use_container_width=True)
+    # st.markdown('<h2 class="section-header">Price Distribution by Category (Violin Plots)</h2>', unsafe_allow_html=True)
+    # violin_cat = st.radio("Category", ["Airline", "Source", "Destination", "Total_Stops"], horizontal=True, key="violin_cat")
+    # fig = px.violin(
+    #     df_filtered, x=violin_cat, y='Price', color=violin_cat, box=True, points='outliers',
+    #     title=f'Price Distribution by {violin_cat}',
+    #     labels={'Price': 'Price (₹)'}
+    # )
+    # fig.update_layout(showlegend=False, xaxis_tickangle=-45)
+    # st.plotly_chart(fig, use_container_width=True)
     
     # --- Source and Destination Cities ---
     col1, col2 = st.columns(2)
@@ -473,34 +480,34 @@ elif page == "🔍  Exploratory Data Analysis":
         st.plotly_chart(fig, use_container_width=True)
     
     # --- Additional Info and Stops Analysis ---
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown('<h2 class="section-header">Price by Additional Info</h2>', unsafe_allow_html=True)
-        info_price = df_filtered.groupby('Additional_Info')['Price'].agg(['mean', 'count']).reset_index()
-        info_price.columns = ['Additional_Info', 'Mean Price', 'Count']
-        info_price = info_price.sort_values('Mean Price', ascending=True)
-        fig = px.bar(
-            info_price, y='Additional_Info', x='Mean Price', orientation='h',
-            color='Mean Price', color_continuous_scale='Teal',
-            hover_data={'Count': ':,'},
-            title='Average Price by Additional Info'
-        )
-        fig.update_traces(hovertemplate='<b>%{y}</b><br>Avg Price: ₹%{x:,.0f}<br>Count: %{customdata[0]:,}<extra></extra>')
-        st.plotly_chart(fig, use_container_width=True)
-    
-    with col2:
-        st.markdown('<h2 class="section-header">Price by Number of Stops</h2>', unsafe_allow_html=True)
-        stops_agg = df_filtered.groupby('Total_Stops')['Price'].agg(['mean', 'median', 'count']).reset_index()
-        stops_agg.columns = ['Total_Stops', 'Mean Price', 'Median Price', 'Count']
-        fig = px.bar(
-            stops_agg, x='Total_Stops', y='Mean Price',
-            color='Mean Price', color_continuous_scale='Purples',
-            hover_data={'Median Price': ':,.0f', 'Count': ':,'},
-            title='Average Price by Number of Stops'
-        )
-        fig.update_traces(hovertemplate='<b>Stops: %{x}</b><br>Mean: ₹%{y:,.0f}<br>Median: ₹%{customdata[0]:,.0f}<br>Flights: %{customdata[1]:,}<extra></extra>')
-        st.plotly_chart(fig, use_container_width=True)
+    # col1, col2 = st.columns(2)
+    # 
+    # with col1:
+    #     st.markdown('<h2 class="section-header">Price by Additional Info</h2>', unsafe_allow_html=True)
+    #     info_price = df_filtered.groupby('Additional_Info')['Price'].agg(['mean', 'count']).reset_index()
+    #     info_price.columns = ['Additional_Info', 'Mean Price', 'Count']
+    #     info_price = info_price.sort_values('Mean Price', ascending=True)
+    #     fig = px.bar(
+    #         info_price, y='Additional_Info', x='Mean Price', orientation='h',
+    #         color='Mean Price', color_continuous_scale='Teal',
+    #         hover_data={'Count': ':,'},
+    #         title='Average Price by Additional Info'
+    #     )
+    #     fig.update_traces(hovertemplate='<b>%{y}</b><br>Avg Price: ₹%{x:,.0f}<br>Count: %{customdata[0]:,}<extra></extra>')
+    #     st.plotly_chart(fig, use_container_width=True)
+    # 
+    # with col2:
+    #     st.markdown('<h2 class="section-header">Price by Number of Stops</h2>', unsafe_allow_html=True)
+    #     stops_agg = df_filtered.groupby('Total_Stops')['Price'].agg(['mean', 'median', 'count']).reset_index()
+    #     stops_agg.columns = ['Total_Stops', 'Mean Price', 'Median Price', 'Count']
+    #     fig = px.bar(
+    #         stops_agg, x='Total_Stops', y='Mean Price',
+    #         color='Mean Price', color_continuous_scale='Purples',
+    #         hover_data={'Median Price': ':,.0f', 'Count': ':,'},
+    #         title='Average Price by Number of Stops'
+    #     )
+    #     fig.update_traces(hovertemplate='<b>Stops: %{x}</b><br>Mean: ₹%{y:,.0f}<br>Median: ₹%{customdata[0]:,.0f}<br>Flights: %{customdata[1]:,}<extra></extra>')
+    #     st.plotly_chart(fig, use_container_width=True)
     
     # --- Outlier Detection ---
     st.markdown('<h2 class="section-header">Outlier Detection (IQR Method)</h2>', unsafe_allow_html=True)
@@ -529,18 +536,18 @@ elif page == "🔍  Exploratory Data Analysis":
     st.plotly_chart(fig, use_container_width=True)
     
     # --- Price vs Duration Scatter ---
-    st.markdown('<h2 class="section-header">Price vs Duration</h2>', unsafe_allow_html=True)
-    df_scatter = df_filtered.copy()
-    df_scatter['Duration_total'] = df_processed.loc[df_filtered.index, 'Duration_hour'] + df_processed.loc[df_filtered.index, 'Duration_min'] / 60
-    fig = px.scatter(
-        df_scatter, x='Duration_total', y='Price',
-        color='Airline', size='Price', size_max=12, opacity=0.6,
-        labels={'Duration_total': 'Total Duration (hours)', 'Price': 'Price (₹)'},
-        title='Flight Price vs Duration (colored by Airline)',
-        hover_data={'Airline': True, 'Source': True, 'Destination': True}
-    )
-    fig.update_traces(hovertemplate='<b>%{customdata[0]}</b><br>%{customdata[1]} → %{customdata[2]}<br>Duration: %{x:.1f}h<br>Price: ₹%{y:,.0f}<extra></extra>')
-    st.plotly_chart(fig, use_container_width=True)
+    # st.markdown('<h2 class="section-header">Price vs Duration</h2>', unsafe_allow_html=True)
+    # df_scatter = df_filtered.copy()
+    # df_scatter['Duration_total'] = df_processed.loc[df_filtered.index, 'Duration_hour'] + df_processed.loc[df_filtered.index, 'Duration_min'] / 60
+    # fig = px.scatter(
+    #     df_scatter, x='Duration_total', y='Price',
+    #     color='Airline', size='Price', size_max=12, opacity=0.6,
+    #     labels={'Duration_total': 'Total Duration (hours)', 'Price': 'Price (₹)'},
+    #     title='Flight Price vs Duration (colored by Airline)',
+    #     hover_data={'Airline': True, 'Source': True, 'Destination': True}
+    # )
+    # fig.update_traces(hovertemplate='<b>%{customdata[0]}</b><br>%{customdata[1]} → %{customdata[2]}<br>Duration: %{x:.1f}h<br>Price: ₹%{y:,.0f}<extra></extra>')
+    # st.plotly_chart(fig, use_container_width=True)
     
     # --- Correlation Heatmap ---
     st.markdown('<h2 class="section-header">Correlation Analysis</h2>', unsafe_allow_html=True)
@@ -596,8 +603,12 @@ elif page == "🤖  Model Training & Prediction":
     else:
         cat_cols = df_model.select_dtypes(include='object').columns.tolist()
         df_model = pd.get_dummies(df_model, columns=cat_cols, drop_first=True)
+        for col in df_model.columns:
+            if df_model[col].dtype == 'bool':
+                df_model[col] = df_model[col].astype(int)
     
     X = df_model.drop('Price', axis=1)
+    X = X.fillna(X.median(numeric_only=True))
     y = df_model['Price'].copy()
     
     # User can select features to include
@@ -840,23 +851,23 @@ elif page == "🤖  Model Training & Prediction":
     st.plotly_chart(fig, use_container_width=True)
     
     # --- QQ Plot ---
-    st.markdown('<h2 class="section-header">QQ Plot — Residual Normality Check</h2>', unsafe_allow_html=True)
-    residuals_arr = np.array(residuals_test).flatten()
-    sorted_resid = np.sort(residuals_arr)
-    n = len(sorted_resid)
-    theoretical_q = np.array([stats.norm.ppf((i - 0.5) / n) for i in range(1, n + 1)])
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=theoretical_q, y=sorted_resid, mode='markers',
-                             marker=dict(color='#636EFA', size=4, opacity=0.5), name='Residuals'))
-    # Reference line
-    slope, intercept = np.polyfit(theoretical_q, sorted_resid, 1)
-    fig.add_trace(go.Scatter(x=[theoretical_q.min(), theoretical_q.max()],
-                             y=[slope*theoretical_q.min()+intercept, slope*theoretical_q.max()+intercept],
-                             mode='lines', line=dict(color='red', dash='dash', width=2), name='Normal Line'))
-    fig.update_layout(title='QQ Plot of Test Residuals', xaxis_title='Theoretical Quantiles',
-                      yaxis_title='Sample Quantiles (₹)', height=500)
-    st.plotly_chart(fig, use_container_width=True)
-    st.caption("If residuals are normally distributed, points closely follow the red dashed line.")
+    # st.markdown('<h2 class="section-header">QQ Plot — Residual Normality Check</h2>', unsafe_allow_html=True)
+    # residuals_arr = np.array(residuals_test).flatten()
+    # sorted_resid = np.sort(residuals_arr)
+    # n = len(sorted_resid)
+    # theoretical_q = np.array([stats.norm.ppf((i - 0.5) / n) for i in range(1, n + 1)])
+    # fig = go.Figure()
+    # fig.add_trace(go.Scatter(x=theoretical_q, y=sorted_resid, mode='markers',
+    #                          marker=dict(color='#636EFA', size=4, opacity=0.5), name='Residuals'))
+    # # Reference line
+    # slope, intercept = np.polyfit(theoretical_q, sorted_resid, 1)
+    # fig.add_trace(go.Scatter(x=[theoretical_q.min(), theoretical_q.max()],
+    #                          y=[slope*theoretical_q.min()+intercept, slope*theoretical_q.max()+intercept],
+    #                          mode='lines', line=dict(color='red', dash='dash', width=2), name='Normal Line'))
+    # fig.update_layout(title='QQ Plot of Test Residuals', xaxis_title='Theoretical Quantiles',
+    #                   yaxis_title='Sample Quantiles (₹)', height=500)
+    # st.plotly_chart(fig, use_container_width=True)
+    # st.caption("If residuals are normally distributed, points closely follow the red dashed line.")
     
     # --- Model Summary ---
     st.markdown('<h2 class="section-header">Model Summary</h2>', unsafe_allow_html=True)
